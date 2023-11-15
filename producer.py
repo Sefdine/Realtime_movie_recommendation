@@ -36,7 +36,7 @@ for i in range (1, 501):
         response = requests.get(MOVIE_ENDPOINT.format(500), params=params)
 
         if response.status_code == 200:
-            movies = response.json()['results']
+            movies = response.json()['results'][0]
             producer.send(TOPIC, value=movies)
             producer.flush()
 
