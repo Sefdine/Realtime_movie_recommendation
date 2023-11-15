@@ -4,6 +4,7 @@ import sys
 from kafka import KafkaProducer
 from kafka.errors import NoBrokersAvailable
 import logging
+import time
 
 # Set up logging
 logging.basicConfig(level=logging.ERROR)
@@ -42,6 +43,7 @@ for i in range (1, 501):
 
             print(f"Movie n°{len(complete_movies)+1} sent successfully!", end='\r')
             complete_movies.extend(movies)
+            time.sleep(1)
         else:
             print("Error fetching data from TMDb API")
     except NoBrokersAvailable as ne:
