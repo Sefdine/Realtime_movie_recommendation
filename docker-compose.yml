@@ -21,7 +21,7 @@ services:
       - zookeeper
 
   es01:
-    image: "docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2"
+    image: "docker.elastic.co/elasticsearch/elasticsearch:7.17.15"
     ports:
       - "9200:9200"
       - "9300:9300"
@@ -44,7 +44,7 @@ services:
       timeout: 10s
       retries: 120
   es02:
-    image: "docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2"
+    image: "docker.elastic.co/elasticsearch/elasticsearch:7.17.15"
     ports:
       - "9201:9200"
       - "9301:9300"
@@ -67,7 +67,7 @@ services:
       timeout: 10s
       retries: 120
   es03:
-    image: "docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2"
+    image: "docker.elastic.co/elasticsearch/elasticsearch:7.17.15"
     ports:
       - "9202:9200"
       - "9303:9300"
@@ -90,7 +90,7 @@ services:
       timeout: 10s
       retries: 120
   kibana:
-    image: docker.elastic.co/kibana/kibana-oss:7.10.2
+    image: docker.elastic.co/kibana/kibana:7.17.15
     depends_on:
       es01:
         condition: service_healthy
@@ -102,6 +102,7 @@ services:
       - "5601:5601"
     environment:
       - 'ELASTICSEARCH_HOSTS=["http://es01:9200","http://es02:9200","http://es03:9200"]'
+
 volumes:
   es-data-es01:
   es-data-es02:
