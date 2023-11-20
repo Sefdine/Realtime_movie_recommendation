@@ -27,7 +27,6 @@ MOVIE_ENDPOINT = "https://api.themoviedb.org/3/movie/popular?page={}"
 
 params = {
     'api_key': API_KEY,
-    'language': 'en-US'
 }
 
 complete_movies = []
