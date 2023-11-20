@@ -25,11 +25,11 @@
       }
     </style>    
 </head>
-<body>
+<body style="background-color: rgb(223, 231, 241);">
     <!-- navigation bar to filter movies and -->
     <header>
-        <nav class="navbar bg-dark">
-            <div class="container-fluid ml-4">
+        <nav class="navbar" style="background-color: rgb(82, 82, 187);">
+            <div class="m-auto">
               <a class="navbar-brand" href="/" style="color: #fff;">Movies</a>
             </div>
           </nav>
@@ -41,14 +41,14 @@
         <h1>Movie Recommender</h1>
         <form method="post" class="form-control">
             {{ form.csrf_token }}
-            <label for="{{ form.movie_name.id }}">Movie Name:</label>
-            {{ form.movie_name(class="form-control", placeholder="Enter movie name", required="required") }}
+            <label for="{{ form.movie_name.id }}" class="my-2">Come get some recommandations</label>
+            {{ form.movie_name(class="form-control", placeholder="Enter the name of a movie", required="required") }}
             <br>
             {{ form.submit(class="btn btn-primary") }}
         </form>
 
         {% if result %}
-            <h2>Your Movie</h2>
+            <h2 class="mt-4">Your Movie</h2>
             <div class="card" style="width: 23rem;">
               <img src="https://image.tmdb.org/t/p/w1280{{ result['movie_getted']['poster_path'] }}" alt="Movie Poster" style="width: 400px;height: 300px;" class="card-img-top img-fluid">
               
@@ -59,10 +59,10 @@
               </div>
             </div>
 
-            <h2>Recommendations</h2>
+            <h2 class="mt-4">Recommendations</h2>
             <ul class="movie-container list-inline">
                 {% for movie in result['recommendations'] %}
-                    <li class="list-inline-item">
+                    <li class="list-inline-item col mb-4">
                         <div class="card" style="width: 23rem;">
                             <img src="https://image.tmdb.org/t/p/w1280{{ movie['poster_path'] }}" alt="Movie Poster" style="width: 400px;height: 300px;" class="card-img-top img-fluid">
                             
