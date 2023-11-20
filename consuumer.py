@@ -3,7 +3,7 @@ from kafka import KafkaConsumer
 from kafka.errors import NoBrokersAvailable
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType, BooleanType, ArrayType, FloatType
-from pyspark.sql.functions import from_json
+from pyspark.sql.functions import from_json, concat_ws, expr, col
 from elasticsearch import Elasticsearch
 import logging
 import sys
@@ -57,6 +57,13 @@ for message in consumer:
     parsed_df = df.selectExpr("CAST(value AS STRING)") \
         .select(from_json("value", schema).alias("data")) \
         .select("data.*")
+    
+    # Combine original_title and overview to create a description
+    parsed_df = parsed_df.withColumn("description", concat_ws(" - ", col("original_title"), col("overview")))
+
+    # Normalize popularity and vote_average fields
+    parsed_df = parsed_df.withColumn("normalized_popularity", expr("popularity / 1000")) \
+        .withColumn("normalized_vote_average", expr("vote_average / 10"))
 
     try:
         # Convert the Spark DataFrame to a Pandas DataFrame
