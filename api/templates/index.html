@@ -49,30 +49,34 @@
 
         {% if result %}
             <h2>Your Movie</h2>
-            <div>
-                <img src="https://image.tmdb.org/t/p/w1280{{ result['Your Movies']['poster_path'] }}" alt="Movie Poster" style="max-width: 200px; max-height: 300px;">
-                <p><strong>Title:</strong> {{ result['Your Movies']['title'] }}</p>
-                <p><strong>Popularity:</strong> {{ result['Your Movies']['popularity'] }}</p>
-                <p><strong>Vote Average:</strong> {{ result['Your Movies']['vote_average'] }}</p>
-                <p><strong>genre names:</strong> {{ result['Your Movies']['genre_names'] }}</p>
-                <!-- Add more information as needed -->
+            <div class="card" style="width: 23rem;">
+              <img src="https://image.tmdb.org/t/p/w1280{{ result['movie_getted']['poster_path'] }}" alt="Movie Poster" style="width: 400px;height: 300px;" class="card-img-top img-fluid">
+              
+              <div class="card-body">
+                <h5 class="card-title">{{ result['movie_getted']['title'] }}</h5>
+                <p class="card-text">{{ result['movie_getted']['overview'][0:100] }}</p>
+                <p><strong>Rating : </strong> {{ result['movie_getted']['vote_average'] }}</p>
+              </div>
             </div>
 
             <h2>Recommendations</h2>
-            <ul class="movie-container">
+            <ul class="movie-container list-inline">
                 {% for movie in result['recommendations'] %}
-                    <li>
-                        <div>
-                            <img src="https://image.tmdb.org/t/p/w1280{{ movie['poster_path'] }}" alt="Movie Poster" style="max-width: 200px; max-height: 300px;">
-                            <p><strong>Title:</strong> {{ movie['title'] }}</p>
-                            <p><strong>Popularity:</strong> {{ movie['popularity'] }}</p>
-                            <p><strong>Vote Average:</strong> {{ movie['vote_average'] }}</p>
-                            <p><strong>Genres:</strong> {{ movie['genre_names'] | join(', ') }}</p>
+                    <li class="list-inline-item">
+                        <div class="card" style="width: 23rem;">
+                            <img src="https://image.tmdb.org/t/p/w1280{{ movie['poster_path'] }}" alt="Movie Poster" style="width: 400px;height: 300px;" class="card-img-top img-fluid">
+                            
+                            <div class="card-body">
+                              <h5 class="card-title">{{ movie['title'] }}</h5>
+                              <p class="card-text">{{ movie['overview'][0:100] }}</p>
+                              <p><strong>Rating : </strong> {{ movie['vote_average'] }}</p>
+                            </div>
                         </div>
-            
                     </li>
                 {% endfor %}
             </ul>
+        {% else %}
+            <p>Woups ! There's nothing for your request</p>
         {% endif %}
               
         <br>
