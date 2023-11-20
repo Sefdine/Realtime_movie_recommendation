@@ -33,7 +33,7 @@ complete_movies = []
 
 for i in range (1, 501):
     try:
-        response = requests.get(MOVIE_ENDPOINT.format(500), params=params)
+        response = requests.get(MOVIE_ENDPOINT.format(i), params=params)
 
         if response.status_code == 200:
             movies = response.json()['results'][0]
