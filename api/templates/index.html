@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    
+    <!-- Bootstrap javascript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
     <title>movies</title>
     <style>
       header {
@@ -25,57 +28,72 @@
 <body>
     <!-- navigation bar to filter movies and -->
     <header>
-        <nav class="navbar bg-body-secondary">
-            <div class="container-fluid">
-              <a class="navbar-brand" href="/">Movies</a>
-              <form class="d-flex"  role="search" method="post" action="/search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-              </form>
+        <nav class="navbar bg-dark">
+            <div class="container-fluid ml-4">
+              <a class="navbar-brand" href="/" style="color: #fff;">Movies</a>
             </div>
           </nav>
     </header>
     <!-- movies section -->
     <section class="movies-section">
-      <div class="container">
-          <div class="row">
-              <!-- Sticky column -->
-              <div class="col-lg-3">
-                <div class="sticky-top">
-                  <!-- Content for the sticky column goes here -->
-                  <ul class="list-group mt-3">
-                    <li class="list-group-item active" aria-current="true">Top Movies</li>
-                    {% for top_movie in top_movies %}
-                    <li class="list-group-item">{{top_movie._source.title}}</li>
-                    {% endfor %}
-                  </ul>
+      <div class="container mt-5">
+
+        <h1>Movie Recommender</h1>
+        <form method="post" class="form-control">
+            {{ form.csrf_token }}
+            <label for="{{ form.movie_name.id }}">Movie Name:</label>
+            {{ form.movie_name(class="form-control", placeholder="Enter movie name", required="required") }}
+            <br>
+            {{ form.submit(class="btn btn-primary") }}
+        </form>
+
+        {% if result %}
+            <h2>Your Movie</h2>
+            <div>
+                <img src="https://image.tmdb.org/t/p/w1280{{ result['Your Movies']['poster_path'] }}" alt="Movie Poster" style="max-width: 200px; max-height: 300px;">
+                <p><strong>Title:</strong> {{ result['Your Movies']['title'] }}</p>
+                <p><strong>Popularity:</strong> {{ result['Your Movies']['popularity'] }}</p>
+                <p><strong>Vote Average:</strong> {{ result['Your Movies']['vote_average'] }}</p>
+                <p><strong>genre names:</strong> {{ result['Your Movies']['genre_names'] }}</p>
+                <!-- Add more information as needed -->
+            </div>
+
+            <h2>Recommendations</h2>
+            <ul class="movie-container">
+                {% for movie in result['recommendations'] %}
+                    <li>
+                        <div>
+                            <img src="https://image.tmdb.org/t/p/w1280{{ movie['poster_path'] }}" alt="Movie Poster" style="max-width: 200px; max-height: 300px;">
+                            <p><strong>Title:</strong> {{ movie['title'] }}</p>
+                            <p><strong>Popularity:</strong> {{ movie['popularity'] }}</p>
+                            <p><strong>Vote Average:</strong> {{ movie['vote_average'] }}</p>
+                            <p><strong>Genres:</strong> {{ movie['genre_names'] | join(', ') }}</p>
+                        </div>
+            
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+              
+        <br>
+        <!-- Movie cards column -->
+        <div class="md-6">
+            <h2>All movies</h2>
+            <div class="row row-cols-3 mt-3">
+                {% for movie in movies %}
+                <div class="col mb-4">
+                    <div class="card" style="width: 23rem;">
+                        <img src="https://www.themoviedb.org/t/p/w300_and_h450_bestv2{{ movie._source.poster_path }}" style="width: 400px;height: 300px;" class="card-img-top img-fluid" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">{{movie._source.title}}</h5>
+                            <p class="card-text">{{movie._source.overview[0:100]}}</p>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <!-- Movie cards column -->
-              <div class="col-lg-9">
-                  <div class="row row-cols-3 mt-3">
-                      {% for movie in movies %}
-                      <div class="col mb-4">
-                          <div class="card" style="width: 23rem;">
-                              <img src="https://www.themoviedb.org/t/p/w300_and_h450_bestv2{{ movie._source.poster_path }}" style="width: 400px;height: 300px;" class="card-img-top img-fluid" alt="...">
-                              <div class="card-body">
-                                  <h5 class="card-title">{{movie._source.title}}</h5>
-                                  <p class="card-text">{{movie._source.overview[0:100]}}</p>
-                                  <div class="row justify-content-center mt-2">
-                                    <div class="col-auto">
-                                        <a href="{{ url_for('get_movie', movie_id=movie._id) }}" class="btn btn-primary">
-                                          detials
-                                        </a>
-                                    </div>
-                                  </div>
-                                  
-                              </div>
-                          </div>
-                      </div>
-                      {% endfor %}
-                  </div>
-              </div>
-          </div>
+                {% endfor %}
+            </div>
+            </div>
+        </div>
       </div>
     </section>
     <section class="pages mt-4">
@@ -96,25 +114,8 @@
           </ul>
       </nav>
     </section>
-    <section class="footer m-4">
-      <div class="card">
-        <div class="card-header">
-          Copyright
-        </div>
-        <div class="card-body">
-          <blockquote class="blockquote">
-            <p>JANE ESSADI</p>
-            <footer class="blockquote-footer mt-2">
-              When I was a kid, I always wondered if a fly could discover the entire world in its short 30 day lifespan. 
-              <cite title="Source Title">
-                It seemed so strange, very, very strange. Until now, I have come to realize that, although we cannot know or study everything in the world, our purpose is not to know everything. Instead, our goal is to contribute positive things to others and help complete the bigger picture of life. So, what is your biggest picture in life?
-              </cite></footer>
-          </blockquote>
-        </div>
-      </div>
-    </section>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
-    </script>
+    <div class="footer m-4 text-center">
+      2023, All right reserved
+    </div>
 </body>
 </html>
